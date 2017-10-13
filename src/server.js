@@ -89,4 +89,7 @@ io.on('connection', (sock) => {
             else if (turn === 'O') turn = 'X';
         }
   });
+    socket.on('disconnect', () =>{
+        numOfPlayers--;
+    })
 });
