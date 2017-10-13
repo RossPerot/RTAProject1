@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        button {
+            width: 30%;
+            height: 300px;
+        }
+        div {
+            height: 100%;
+        }
+    </style>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/babel" >
+        "use strict";
+
+        let socket;
+
+        let buttons;
+        let tictactoe;
+        let player;
+
+        const updateButtons = (data) => {
+            console.log(data);
+            for (let i = 1; i < 10; i++)
+            {
+                $("#" + i).html(data[i]);   
+            }
+        };
+
+        const onButtonClick = (e) => {
+                let target = e.target;
+                console.log(`${target.id} clicked`);
+                socket.emit('play', { player: player, location: target.id}); 
+        }
+
+        const init = () =>{
+            
+            tictactoe = $("#tictactoe");
+            
+            socket = io.connect();
+            
+            socket.on('connect', () =>{
+                //setInterval(sendPosition, 50);
+            });
+            
+            socket.on('playFromServer', updateButtons);
+            
+            socket.on('joined', (data) => {
+                player = data.player;
+            });
+            
+            socket.on('winner', (data) => {
+                $("#winner").html(data.player + " wins!");
+            })
+            
+            $(tictactoe).on('click', ".button", onButtonClick)
+        }
+        
+        window.onload = init;
+
+    </script>
+</head>
+<body>
+    <div id="tictactoe">
+        <button id="1" class="button"></button>
+        <button id="2" class="button"></button>
+        <button id="3" class="button"></button>
+        <button id="4" class="button"></button>
+        <button id="5" class="button"></button>
+        <button id="6" class="button"></button>
+        <button id="7" class="button"></button>
+        <button id="8" class="button"></button>
+        <button id="9" class="button"></button>
+    </div>
+    <p id="winner"></p>
+</body>
+</html>
