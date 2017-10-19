@@ -63,6 +63,7 @@
                 player = data.player;
                 roomNumber = data.room;
                 updateButtons(data.tictactoe);
+                $("#winner").html("You are player " + player);
             });
             
             socket.on('winner', (data) => {

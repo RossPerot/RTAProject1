@@ -81,9 +81,14 @@ io.on('connection', (sock) => {
 
   socket.on('play', (data) => {
     if (data.player === turn) {
+        let validPlay = false;
       let currentBoard = tictactoe[`room${data.room}`];
       const tempBoard = currentBoard.split(',');
-      tempBoard[data.location] = data.player;
+        if(tempBoard[data.location] !== 'X' && tempBoard[data.location] !== 'O')
+        {
+            tempBoard[data.location] = data.player;
+            validPlay = true;
+        }
       currentBoard = tempBoard.join();
       tictactoe[`room${data.room}`] = currentBoard;
       if (checkForWinner(turn, data.room)) {
@@ -92,8 +97,11 @@ io.on('connection', (sock) => {
         return;
       }
       io.sockets.in(`room${data.room}`).emit('playFromServer', tictactoe[`room${data.room}`]);
-      if (turn === 'X') turn = 'O';
-      else if (turn === 'O') turn = 'X';
+        if(validPlay)
+        {
+            if (turn === 'X') turn = 'O';
+            else if (turn === 'O') turn = 'X';
+        }
     }
   });
   socket.on('disconnect', () => {
