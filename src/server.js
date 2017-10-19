@@ -105,6 +105,5 @@ io.on('connection', (sock) => {
     }
   });
   socket.on('disconnect', () => {
-    numOfPlayers--;
   });
 });
