@@ -3,8 +3,16 @@
 <head>
     <style>
         button {
-            width: 30%;
+            width: 300px;
             height: 300px;
+            background-color: white;
+            border-color: black;
+            border-width: 5px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 150px;
+            vertical-align: top;
         }
         div {
             height: 100%;
@@ -21,19 +29,22 @@
         let buttons;
         let tictactoe;
         let player;
+        let roomNumber;
 
         const updateButtons = (data) => {
-            console.log(data);
-            for (let i = 1; i < 10; i++)
+            //console.log(data);
+            let tempBoard = data.split(',');
+            for (let i = 0; i < 9; i++)
             {
-                $("#" + i).html(data[i]);   
+                $("#" + i).html(tempBoard[i]);   
             }
         };
 
         const onButtonClick = (e) => {
                 let target = e.target;
                 console.log(`${target.id} clicked`);
-                socket.emit('play', { player: player, location: target.id}); 
+                socket.emit('play', { player: player, location: target.id, room: roomNumber }); 
+                console.log(roomNumber);
         }
 
         const init = () =>{
@@ -50,6 +61,8 @@
             
             socket.on('joined', (data) => {
                 player = data.player;
+                roomNumber = data.room;
+                updateButtons(data.tictactoe);
             });
             
             socket.on('winner', (data) => {
@@ -65,15 +78,15 @@
 </head>
 <body>
     <div id="tictactoe">
-        <button id="1" class="button"></button>
-        <button id="2" class="button"></button>
-        <button id="3" class="button"></button>
-        <button id="4" class="button"></button>
-        <button id="5" class="button"></button>
-        <button id="6" class="button"></button>
-        <button id="7" class="button"></button>
-        <button id="8" class="button"></button>
-        <button id="9" class="button"></button>
+        <button id="0" class="button"> </button>
+        <button id="1" class="button"> </button>
+        <button id="2" class="button"> </button><br />
+        <button id="3" class="button"> </button>
+        <button id="4" class="button"> </button>
+        <button id="5" class="button"> </button><br />
+        <button id="6" class="button"> </button>
+        <button id="7" class="button"> </button>
+        <button id="8" class="button"> </button><br />
     </div>
     <p id="winner"></p>
 </body>
